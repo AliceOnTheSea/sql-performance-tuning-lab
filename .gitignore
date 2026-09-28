@@ -1,0 +1,19 @@
+## Ignore Visual Studio / .NET / C# build outputs and temp files
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
+[Bb]enchmark[Dd]ot[Nn]et.[Aa]rtifacts/
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# SQL Server local data files
+*.mdf
+*.ldf
