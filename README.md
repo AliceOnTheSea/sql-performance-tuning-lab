@@ -1,5 +1,7 @@
 # 🚀 SQL Server & .NET 8 Performance Tuning Lab
 
+[![CI Build & Verification](https://github.com/AliceOnTheSea/sql-performance-tuning-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/AliceOnTheSea/sql-performance-tuning-lab/actions/workflows/ci.yml)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Codespaces-Open_in_Dev_Container-blue?logo=github)](https://codespaces.new/AliceOnTheSea/sql-performance-tuning-lab)
 [![Framework](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![Database](https://img.shields.io/badge/SQL_Server-2022-CC292B?logo=microsoftsqlserver)](https://www.microsoft.com/en-us/sql-server/sql-server-2022)
 [![Benchmarking](https://img.shields.io/badge/BenchmarkDotNet-v0.13.12-blue)](https://benchmarkdotnet.org/)

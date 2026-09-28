@@ -1,0 +1,56 @@
+name: CI & Benchmark Verification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-verify:
+    name: Build Solution & Verify Database Setup
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "YourStrong@Passw0rd!"
+          MSSQL_PID: "Developer"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd!' -C -Q 'SELECT 1' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore sql-performance-tuning-lab.sln
+
+      - name: Build Solution (Release Mode)
+        run: dotnet build sql-performance-tuning-lab.sln -c Release --no-restore
+
+      - name: Verify SQL Server Connectivity & Run Schema Script
+        run: |
+          docker exec -i $(docker ps -q -f ancestor=mcr.microsoft.com/mssql/server:2022-latest) /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd!' -C -Q "SELECT @@VERSION;"
+
+      - name: Execute Database Initialization Script
+        run: |
+          docker exec -i $(docker ps -q -f ancestor=mcr.microsoft.com/mssql/server:2022-latest) /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd!' -C -i /dev/stdin < sql/01_schema.sql
+          docker exec -i $(docker ps -q -f ancestor=mcr.microsoft.com/mssql/server:2022-latest) /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd!' -C -i /dev/stdin < sql/03_indexes.sql
+
+      - name: Verify Benchmark Binary Output
+        run: |
+          test -f src/PerformanceLab.Benchmarks/bin/Release/net8.0/PerformanceLab.Benchmarks.dll
