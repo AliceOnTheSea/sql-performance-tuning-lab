@@ -33,6 +33,5 @@ public class BenchmarkConfig : ManualConfig
         AddColumn(StatisticColumn.StdDev);
         AddColumn(StatisticColumn.Median);
         AddColumn(BaselineRatioColumn.RatioMean);
-        AddColumn(AllocationColumn.Default);
     }
 }

@@ -28,24 +28,24 @@ This laboratory provides an automated, containerized benchmark environment using
 
 ```mermaid
 graph TD
-    SubGraph1[Client / Benchmark Harness] -->|BenchmarkDotNet| Runner[Program.cs CLI]
+    SubGraph1["Client / Benchmark Harness"] -->|BenchmarkDotNet| Runner["Program.cs CLI"]
     
-    Runner --> B1[CoveringIndexBenchmark]
-    Runner --> B2[KeysetPaginationBenchmark]
-    Runner --> B3[OrmOverheadBenchmark]
+    Runner --> B1["CoveringIndexBenchmark"]
+    Runner --> B2["KeysetPaginationBenchmark"]
+    Runner --> B3["OrmOverheadBenchmark"]
     
-    B1 -->|Dapper Query| DB[(SQL Server 2022 Docker)]
+    B1 -->|Dapper Query| DB[("SQL Server 2022 Docker")]
     B2 -->|Raw SQL Seek| DB
     B3 -->|EF Core / Dapper| DB
     
-    subgraph Database Internals (PerformanceLabDb)
-        DB --> T1[Customers - 10,000 rows]
-        DB --> T2[Orders - 500,000 rows]
-        DB --> T3[OrderItems - 2,000,000 rows]
+    subgraph DB_Internals ["Database Internals (PerformanceLabDb)"]
+        DB --> T1["Customers - 10,000 rows"]
+        DB --> T2["Orders - 500,000 rows"]
+        DB --> T3["OrderItems - 2,000,000 rows"]
         
-        T2 --> IX1[IX_Orders_Unoptimized: Status]
-        T2 --> IX2[IX_Orders_Covering: Status, OrderDate INCLUDE ...]
-        T2 --> IX3[IX_Orders_Pagination: OrderDate DESC, Id DESC]
+        T2 --> IX1["IX_Orders_Unoptimized: Status"]
+        T2 --> IX2["IX_Orders_Covering: Status, OrderDate INCLUDE ..."]
+        T2 --> IX3["IX_Orders_Pagination: OrderDate DESC, Id DESC"]
     end
 ```
 
